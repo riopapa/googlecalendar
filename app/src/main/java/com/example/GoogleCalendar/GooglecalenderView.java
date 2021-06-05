@@ -3,7 +3,6 @@ package com.example.GoogleCalendar;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +34,9 @@ public class GooglecalenderView extends LinearLayout {
     private Context context;
     private ViewPager2 viewPager;
     private MonthChangeListner monthChangeListner;
-    private int currentmonth = 0;
-    private LocalDate mindate, maxdate;
-    private HashMap<LocalDate, EventInfo> eventuser = new HashMap<>();
+    private int currentMonth = 0;
+    private LocalDate minDate, maxDate;
+    private HashMap<LocalDate, EventInfo> eventUser = new HashMap<>();
 
     public GooglecalenderView(Context context) {
         super(context);
@@ -76,41 +75,41 @@ public class GooglecalenderView extends LinearLayout {
     }
 
     public int calculateCurrentMonth(LocalDate currentmonthda) {
-        if (currentmonthda == null||mindate==null) return 0;
-        LocalDate mindateobj = mindate.toDateTimeAtStartOfDay().dayOfMonth().withMinimumValue().toLocalDate();
+        if (currentmonthda == null|| minDate ==null) return 0;
+        LocalDate mindateobj = minDate.toDateTimeAtStartOfDay().dayOfMonth().withMinimumValue().toLocalDate();
         LocalDate current = currentmonthda.dayOfMonth().withMaximumValue();
         int months = Months.monthsBetween(mindateobj, current).getMonths();
         return months;
     }
 
-    public int getCurrentmonth() {
-        return currentmonth;
+    public int getCurrentMonth() {
+        return currentMonth;
     }
 
-    public void setCurrentmonth(LocalDate currentmonthda) {
-        if (mindate==null)return;
-        currentmonth = calculateCurrentMonth(currentmonthda);
-        if (viewPager.getCurrentItem() != currentmonth) {
-            viewPager.setCurrentItem(currentmonth, false);
+    public void setCurrentMonth(LocalDate currentmonthda) {
+        if (minDate ==null)return;
+        currentMonth = calculateCurrentMonth(currentmonthda);
+        if (viewPager.getCurrentItem() != currentMonth) {
+            viewPager.setCurrentItem(currentMonth, false);
             //  viewPager.getAdapter().notifyDataSetChanged();
         }
     }
 
     public void setCurrentmonth(int position) {
 
-        currentmonth = position;
-        if (viewPager.getCurrentItem() != currentmonth) {
-            viewPager.setCurrentItem(currentmonth, false);
+        currentMonth = position;
+        if (viewPager.getCurrentItem() != currentMonth) {
+            viewPager.setCurrentItem(currentMonth, false);
             //  viewPager.getAdapter().notifyDataSetChanged();
         }
     }
 
     public void init(HashMap<LocalDate, EventInfo> eventhashmap, LocalDate mindate, LocalDate maxdate) {
-        eventuser = eventhashmap;
+        eventUser = eventhashmap;
         viewPager = findViewById(R.id.viewpager);
 
-        this.mindate = mindate;
-        this.maxdate = maxdate;
+        this.minDate = mindate;
+        this.maxDate = maxdate;
         DateTime mindateobj = mindate.toDateTimeAtStartOfDay();
         DateTime maxdateobj = maxdate.toDateTimeAtStartOfDay();
         int months = Months.monthsBetween(mindateobj, maxdateobj).getMonths();
@@ -124,11 +123,11 @@ public class GooglecalenderView extends LinearLayout {
             if (firstday == 7) firstday = 0;
             int lastday = mindateobj.dayOfMonth().withMaximumValue().dayOfWeek().get();
             MonthModel month = new MonthModel();
-            month.setMonthnamestr(mindateobj.toString("MMMM"));
+            month.setMonthNameStr(mindateobj.toString("MMMM"));
             month.setMonth(mindateobj.getMonthOfYear());
-            month.setNoofday(mindateobj.dayOfMonth().getMaximumValue());
+            month.setNoofDay(mindateobj.dayOfMonth().getMaximumValue());
             month.setYear(mindateobj.getYear());
-            month.setFirstday(firstday);
+            month.setFirstDay(firstday);
             int currentyear = new LocalDate().getYear();
             ArrayList<DayModel> dayModelArrayList = new ArrayList<>();
             DateTime startday = mindateobj.dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
@@ -139,7 +138,7 @@ public class GooglecalenderView extends LinearLayout {
 
                     String s[] = {"tojigs" + minweek.toString("d").toUpperCase() + " - " + minweek.plusDays(6).toString(lastpattern).toUpperCase()};
 
-                    Log.e("test",minweek.toString());
+//                    Log.e("test",minweek.toString());
                     if (!eventhash.containsKey(minweek)) eventhash.put(minweek, new EventInfo(s));
 
                     minweek = minweek.plusWeeks(1);
@@ -149,7 +148,7 @@ public class GooglecalenderView extends LinearLayout {
                     String lastpattern = minweek.getYear() == currentyear ? "d MMM" : "d MMM YYYY";
                     String s[] = {"tojigs" + minweek.toString("d MMM").toUpperCase() + " - " + minweek.plusDays(6).toString(lastpattern).toUpperCase()};
 
-                    Log.e("test1",minweek.toString());
+//                    Log.e("test1",minweek.toString());
                     if (!eventhash.containsKey(minweek)) eventhash.put(minweek, new EventInfo(s));
 
                     minweek = minweek.plusWeeks(1);
@@ -158,36 +157,36 @@ public class GooglecalenderView extends LinearLayout {
 
             }
 
-            for (int j = 1; j <= month.getNoofday(); j++) {
+            for (int j = 1; j <= month.getNoofDay(); j++) {
 
                 DayModel dayModel = new DayModel();
                 dayModel.setDay(startday.getDayOfMonth());
                 dayModel.setMonth(startday.getMonthOfYear());
                 dayModel.setYear(startday.getYear());
-                if (eventuser.containsKey(startday.toLocalDate())) {
+                if (eventUser.containsKey(startday.toLocalDate())) {
                     if (eventhash.containsKey(startday.toLocalDate())) {
                         EventInfo eventInfo=eventhash.get(startday.toLocalDate());
-                        List<String> list = Arrays.asList(eventInfo.eventtitles);
+                        List<String> list = Arrays.asList(eventInfo.titles);
                         list = new ArrayList<>(list);
-                        for (String s : eventuser.get(startday.toLocalDate()).eventtitles) {
+                        for (String s : eventUser.get(startday.toLocalDate()).titles) {
                             list.add(s);
                         }
                         String[] mStringArray = new String[list.size()];
                         String[] s = list.toArray(mStringArray);
-                        eventInfo.eventtitles=s;
+                        eventInfo.titles =s;
                         eventhash.put(startday.toLocalDate(), eventInfo);
 
                     } else {
-                        eventhash.put(startday.toLocalDate(), eventuser.get(startday.toLocalDate()));
+                        eventhash.put(startday.toLocalDate(), eventUser.get(startday.toLocalDate()));
                     }
                     // dayModel.setEvents(eventuser.get(startday.toLocalDate()));
-                    dayModel.setEventlist(true);
+                    dayModel.setEventList(true);
 
                 }
 
                 if (startday.toLocalDate().equals(new LocalDate())) {
                     dayModel.setToday(true);
-                    currentmonth = i;
+                    currentMonth = i;
                 } else {
                     dayModel.setToday(false);
                 }
@@ -197,7 +196,7 @@ public class GooglecalenderView extends LinearLayout {
                     EventInfo eventInfo1=new EventInfo();
 
                     String s[] = {"start"};
-                    eventInfo1.eventtitles=s;
+                    eventInfo1.titles =s;
 //                  if (eventhash.containsKey(startday.dayOfWeek().withMinimumValue().toLocalDate())&&eventhash.get(startday.dayOfWeek().withMinimumValue().toLocalDate())[0].contains("tojigs")){
 //                     Log.e("remove",startday.dayOfWeek().withMinimumValue().toLocalDate()+"->"+Arrays.asList(eventhash.get(startday.dayOfWeek().withMinimumValue().toLocalDate())));
 //                    eventhash.remove(startday.dayOfWeek().withMinimumValue().toLocalDate());
@@ -205,12 +204,12 @@ public class GooglecalenderView extends LinearLayout {
 //                  }
                     if (eventhash.containsKey(startday.toLocalDate())) {
                         EventInfo eventInfo=eventhash.get(startday.toLocalDate());
-                        List<String> list = Arrays.asList(eventInfo.eventtitles);
+                        List<String> list = Arrays.asList(eventInfo.titles);
                         list = new ArrayList<>(list);
                         list.add(0, "start");
                         String[] mStringArray = new String[list.size()];
                         s = list.toArray(mStringArray);
-                        eventInfo.eventtitles=s;
+                        eventInfo.titles =s;
                         eventInfo1=eventInfo;
 
                     }
@@ -251,12 +250,12 @@ public class GooglecalenderView extends LinearLayout {
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                Log.e("onPageSelected", position + "");
+//                Log.e("onPageSelected", position + "");
                 MainActivity mainActivity = (MainActivity) context;
-                currentmonth = position;
+                currentMonth = position;
 
                 if (!mainActivity.isAppBarClosed()) {
-                    Log.e("onPageSelected", "Googlecalendaraview");
+//                    Log.e("onPageSelected", "Googlecalendaraview");
                     adjustheight();
                     if (mainActivity.mNestedView.getVisibility()==VISIBLE)EventBus.getDefault().post(new MessageEvent(new LocalDate(myPagerAdapter.monthModels.get(position).getYear(), myPagerAdapter.monthModels.get(position).getMonth(), 1)));
 
@@ -265,7 +264,7 @@ public class GooglecalenderView extends LinearLayout {
                     // myPagerAdapter.notifyDataSetChanged();
 
                     if (monthChangeListner != null)
-                        monthChangeListner.onmonthChange(myPagerAdapter.monthModels.get(position));
+                        monthChangeListner.onMonthChange(myPagerAdapter.monthModels.get(position));
                 }
 
             }
@@ -306,7 +305,7 @@ public class GooglecalenderView extends LinearLayout {
             eventhash.put(todaydate,new EventInfo( new String[]{"todaydate"}));
         } else {
 
-            List<String> list = Arrays.asList(eventhash.get(todaydate).eventtitles);
+            List<String> list = Arrays.asList(eventhash.get(todaydate).titles);
             list = new ArrayList<>(list);
 
             boolean b = true;
@@ -315,7 +314,7 @@ public class GooglecalenderView extends LinearLayout {
 
             String[] mStringArray = new String[list.size()];
             EventInfo eventInfo=eventhash.get(todaydate);
-            eventInfo.eventtitles=list.toArray(mStringArray);
+            eventInfo.titles =list.toArray(mStringArray);
             eventhash.put(todaydate, eventInfo);
         }
         Map<LocalDate, EventInfo> treeMap = new TreeMap<LocalDate, EventInfo>(eventhash);
@@ -323,7 +322,7 @@ public class GooglecalenderView extends LinearLayout {
         int i = 0;
         ArrayList<EventModel> eventModelslist = new ArrayList<>();
         for (HashMap.Entry<LocalDate, EventInfo> localDateStringEntry : treeMap.entrySet()) {
-            for (String s : localDateStringEntry.getValue().eventtitles) {
+            for (String s : localDateStringEntry.getValue().titles) {
                 if (s == null) continue;
                 int type = 0;
                 if (s.startsWith("todaydate")) type = 2;
@@ -394,11 +393,11 @@ public class GooglecalenderView extends LinearLayout {
     }
 
     public void adjustheight() {
-        if (mindate==null)return;
+        if (minDate ==null)return;
         final MonthPagerAdapter myPagerAdapter = (MonthPagerAdapter) viewPager.getAdapter();
         if (myPagerAdapter != null) {
             final int position = viewPager.getCurrentItem();
-            int size = myPagerAdapter.monthModels.get(position).getDayModelArrayList().size() + myPagerAdapter.monthModels.get(position).getFirstday();
+            int size = myPagerAdapter.monthModels.get(position).getDayModelArrayList().size() + myPagerAdapter.monthModels.get(position).getFirstDay();
             int numbercolumn = size % 7 == 0 ? size / 7 : (size / 7) + 1;
             ViewGroup.LayoutParams params = getLayoutParams();
             int setheight = 65 + (context.getResources().getDimensionPixelSize(R.dimen.itemheight) * numbercolumn) + context.getResources().getDimensionPixelSize(R.dimen.tendp) + getStatusBarHeight();
@@ -407,9 +406,9 @@ public class GooglecalenderView extends LinearLayout {
             // params.height=0;//jigs change
             setLayoutParams(params);
             RecyclerView recyclerView = (RecyclerView) viewPager.getChildAt(0);
-            Log.e("adjust0", recyclerView.getHeight() + "");
-            Log.e("adjust1", viewPager.getHeight() + "");
-            Log.e("adjust2", params.height + "");
+//            Log.e("adjust0", recyclerView.getHeight() + "");
+//            Log.e("adjust1", viewPager.getHeight() + "");
+//            Log.e("adjust2", params.height + "");
 
 
         }
@@ -434,7 +433,7 @@ public class GooglecalenderView extends LinearLayout {
             super(fragmentManager);
             this.monthModels = monthModels;
             for (int i = 0; i < monthModels.size(); i++) {
-                firstFragments.add(FirstFragment.newInstance(monthModels.get(i).getMonth(), monthModels.get(i).getYear(), monthModels.get(i).getFirstday(), monthModels.get(i).getDayModelArrayList()));
+                firstFragments.add(FirstFragment.newInstance(monthModels.get(i).getMonth(), monthModels.get(i).getYear(), monthModels.get(i).getFirstDay(), monthModels.get(i).getDayModelArrayList()));
             }
         }
 
@@ -486,7 +485,7 @@ public class GooglecalenderView extends LinearLayout {
 
             MonthModel monthtemp = monthModels.get(position);
 
-            Dayadapter dayadapter = new Dayadapter(context, monthtemp.getDayModelArrayList(), monthtemp.getFirstday(), monthtemp.getMonth(), monthtemp.getYear());
+            Dayadapter dayadapter = new Dayadapter(context, monthtemp.getDayModelArrayList(), monthtemp.getFirstDay(), monthtemp.getMonth(), monthtemp.getYear());
             holder.gridview.setAdapter(dayadapter);
             dayadapter.notifyDataSetChanged();
 
@@ -544,7 +543,7 @@ public class GooglecalenderView extends LinearLayout {
             if (position >= firstday) {
                 position = position - firstday;
                 DayModel dayModel = dayModels.get(position);
-                boolean selected = dayModel.getDay() == MainActivity.lastdate.getDayOfMonth() && dayModel.getMonth() == MainActivity.lastdate.getMonthOfYear() && dayModel.getYear() == MainActivity.lastdate.getYear() ? true : false;
+                boolean selected = dayModel.getDay() == MainActivity.lastDate.getDayOfMonth() && dayModel.getMonth() == MainActivity.lastDate.getMonthOfYear() && dayModel.getYear() == MainActivity.lastDate.getYear() ? true : false;
 
                 if (dayModel.isToday()) {
                     holder.textView.setBackgroundResource(R.drawable.circle);
@@ -561,7 +560,7 @@ public class GooglecalenderView extends LinearLayout {
                 }
                 holder.textView.setText(dayModels.get(position).getDay() + "");
 
-                if (dayModel.getEventlist() && !selected) {
+                if (dayModel.getEventList() && !selected) {
                     holder.eventview.setVisibility(View.VISIBLE);
                 } else {
                     holder.eventview.setVisibility(View.GONE);
@@ -598,15 +597,15 @@ public class GooglecalenderView extends LinearLayout {
                                 dayModel.setSelected(false);
                             }
 
-                            MainActivity.lastdate = new LocalDate(year, month, dayModels.get(getAdapterPosition() - firstday).getDay());
+                            MainActivity.lastDate = new LocalDate(year, month, dayModels.get(getAdapterPosition() - firstday).getDay());
                             MainActivity mainActivity= (MainActivity) context;
                             if (mainActivity.mNestedView.getVisibility()==VISIBLE)EventBus.getDefault().post(new MessageEvent(new LocalDate(year, month, dayModels.get(getAdapterPosition() - firstday).getDay())));
                             // dayModels.get(getAdapterPosition()-firstday).setSelected(true);
-                            if (mainActivity.weekviewcontainer.getVisibility()==VISIBLE){
+                            if (mainActivity.weekWiewContainer.getVisibility()==VISIBLE){
                                 Calendar todaydate=Calendar.getInstance();
-                                todaydate.set(Calendar.DAY_OF_MONTH,MainActivity.lastdate.getDayOfMonth());
-                                todaydate.set(Calendar.MONTH,MainActivity.lastdate.getMonthOfYear()-1);
-                                todaydate.set(Calendar.YEAR,MainActivity.lastdate.getYear());
+                                todaydate.set(Calendar.DAY_OF_MONTH,MainActivity.lastDate.getDayOfMonth());
+                                todaydate.set(Calendar.MONTH,MainActivity.lastDate.getMonthOfYear()-1);
+                                todaydate.set(Calendar.YEAR,MainActivity.lastDate.getYear());
                                 mainActivity.mWeekView.goToDate(todaydate);
                             }
                             notifyDataSetChanged();

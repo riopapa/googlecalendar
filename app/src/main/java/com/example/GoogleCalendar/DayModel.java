@@ -8,15 +8,15 @@ public class DayModel {
     private String[] events;
 
     private boolean selected;
-    private boolean eventlist;
-    private boolean isenable;
+    private boolean eventList;
+    private boolean isEnable;
 
-    public boolean getEventlist() {
-        return eventlist;
+    public boolean getEventList() {
+        return eventList;
     }
 
-    public void setEventlist(boolean event) {
-        this.eventlist = event;
+    public void setEventList(boolean event) {
+        this.eventList = event;
     }
 
     public String[] getEvents() {
@@ -43,12 +43,12 @@ public class DayModel {
         this.today = today;
     }
 
-    public boolean isenable() {
-        return isenable;
+    public boolean isEnable() {
+        return isEnable;
     }
 
-    public void setIsenable(boolean isenable) {
-        this.isenable = isenable;
+    public void setEnable(boolean enable) {
+        this.isEnable = enable;
     }
 
     public int getMonth() {

@@ -12,9 +12,7 @@ import org.joda.time.Instant;
 import org.joda.time.LocalDate;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import androidx.core.app.ActivityCompat;
@@ -26,10 +24,11 @@ public class Utility {
 
     public static HashMap<LocalDate, EventInfo> localDateHashMap = new HashMap<>();
 
-    public static HashMap<LocalDate, EventInfo> readCalendarEvent(Context context, LocalDate mintime, LocalDate maxtime) {
+    public static HashMap<LocalDate, EventInfo> readCalendarEvent(Context context, LocalDate minTime, LocalDate maxTime) {
 
         int f=1;
-        String selection = "(( " + CalendarContract.Events.SYNC_EVENTS + " = " + f +" ) AND ( " + CalendarContract.Events.DTSTART + " >= " + mintime.toDateTimeAtStartOfDay().getMillis() + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + maxtime.toDateTimeAtStartOfDay().getMillis() + " ))";
+//        String selection = "(( " + CalendarContract.Events.SYNC_EVENTS + " = " + f +" ) AND ( " + CalendarContract.Events.DTSTART + " >= " + mintime.toDateTimeAtStartOfDay().getMillis() + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + maxtime.toDateTimeAtStartOfDay().getMillis() + " ))";
+        String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + minTime.toDateTimeAtStartOfDay().getMillis() + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + maxTime.toDateTimeAtStartOfDay().getMillis() + " ))";
         Log.e("selection","----- selection ----");
         Log.e("selection",selection);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -52,7 +51,9 @@ public class Utility {
                         "eventLocation", // 5
                         CalendarContract.Events.ALL_DAY,        // 6    1, 0
                         CalendarContract.Events.CALENDAR_DISPLAY_NAME, // 7 rio papa
-                        CalendarContract.Events.CALENDAR_TIME_ZONE // 8    Asia/Seoul
+                        CalendarContract.Events.CALENDAR_TIME_ZONE, // 8    Asia/Seoul
+                        CalendarContract.Events.SYNC_DATA9, // 9
+                        CalendarContract.Events.RRULE   // 10
 //                        CalendarContract.Events.ACCOUNT_TYPE, //   com.google
                         },
                         selection,
@@ -68,7 +69,7 @@ public class Utility {
         int count = cursor.getCount();
         Log.e("Total","Cursor count="+count);
         while (cursor.moveToNext()) {
-            String eID = cursor.getString(0);
+            Integer eID = cursor.getInt(0);
             String eTitle = cursor.getString(1);
             String eDesc = cursor.getString(2);
             LocalDate eDate = getDate(Long.parseLong(cursor.getString(3)));
@@ -76,13 +77,17 @@ public class Utility {
             Long eFinish = cursor.getLong(4);
             String eLocation = cursor.getString(5);
             boolean eAllay = (cursor.getInt(6) == 1);
-            String eDispName = cursor.getString(7);
+            String eCalName = cursor.getString(7);
             String eZone = cursor.getString(8);
+            String eSync9 = cursor.getString(9);
+            String eRule = cursor.getString(10);
             Log.w("id="+eID,"title="+eTitle+", desc="+eDesc+", date="+eDate
                     +", time="+sdf.format(eStart)+"~"+sdf.format(eFinish)
                     +", loc="+eLocation+", all="+eAllay
-                    +", zone="+eZone +", disp="+eDispName
+                    +", zone="+eZone +", disp="+eCalName
+                    +", sync9="+eSync9+", rule="+eRule
             );
+
             if (eTitle == null)
                 continue;
 
@@ -93,77 +98,43 @@ public class Utility {
 //                Log.e("Acc",cursor.getString(1)+","+Integer.toHexString(cursor.getInt(8))+","+cursor.getString(9)+","+localDate);
                 if (!localDateHashMap.containsKey(localDate)) {
                     EventInfo eventInfo=new EventInfo();
-                    eventInfo.id=cursor.getInt(0);
-                    eventInfo.starttime=cursor.getLong(3);
-                    eventInfo.endtime=cursor.getLong(4);
-                    eventInfo.isallday=cursor.getInt(7)==1;
-                    String title = cursor.getString(1);
-                    eventInfo.eventtitles = new String[]{(title == null) ? "blank":title};
-                    eventInfo.title=cursor.getString(1);
-                    eventInfo.timezone=cursor.getString(8);
-                    eventInfo.eventcolor= 12345; //cursor.getInt(8);
+                    eventInfo.id=eID;
+                    eventInfo.startTime =eStart;
+                    eventInfo.finishTime =eFinish;
+                    eventInfo.isAllDay =eAllay;
+                    eventInfo.titles = new String[]{eTitle};
+                    eventInfo.title=eTitle;
+                    eventInfo.timeZone =eZone;
+                    eventInfo.calName = eCalName;
+                    eventInfo.eventcolor = setColorValue(eCalName);
                     localDateHashMap.put(localDate, eventInfo);
 
                 } else {
                     EventInfo eventInfo= localDateHashMap.get(localDate);
                     EventInfo prev=eventInfo;
-                    String[] s =eventInfo.eventtitles;
-                    Log.e("s[] "+localDate, "len="+s.length);
-                    String nTitle = cursor.getString(1);
-//                    if (nTitle == null) {
-//                        nTitle = "NULL";
-//                        Log.e("ntitle ","is "+nTitle);
-//                    }
+                    String[] s =eventInfo.titles;
                     boolean isneed = true;
                     for (int i = 0; i < s.length; i++) {
-                        String s1;
-//                        try {
-                            s1 = s[i];
-//                            if (s1 ==  null) {
-//                                Log.w("S1 is ","NULL");
-//                                s1 = "no value ^";
-//                            }
-//                        } catch (Exception e) {
-//                            s1 = "nothing "+i;
-//                        }
-//                        Log.e("event title "+i,s1 + localDate);
-                        if (s1.equals(nTitle)) {
-
+                        if (s[i].equals(eTitle)) {
                             isneed = false;
                             break;
                         }
-                        if (i + 1 < s.length) prev = prev.nextnode;
-
+                        if (i + 1 < s.length) prev = prev.nextNode;
                     }
                     if (isneed) {
-                        ArrayList<String> ar = new ArrayList<String>();
-                        for (int i = 0; i < s.length; i++)
-                            ar.add(s[i]);
-                        ar.add(cursor.getString(1));
-                        String []ss = ar.toArray(new String[0]);
-
-                        eventInfo.eventtitles=ss;
-
-                        EventInfo nextnode=new EventInfo();
-                        nextnode.id=cursor.getInt(0);
-                        nextnode.starttime=Long.parseLong(cursor.getString(3));
-                        try {
-                            nextnode.endtime = Long.parseLong(cursor.getString(4));
-                        } catch (Exception e) {
-                            Log.e("endtime","exception "+cursor.getString(4));
-                            nextnode.endtime = nextnode.starttime + 60000;
-                        }
-//                        try {
-                            nextnode.isallday = cursor.getInt(7) == 1;
-//                        } catch (Exception e) {
-//                            nextnode.isallday = false;
-//                        }
-                        nextnode.title=cursor.getString(1);
-                        nextnode.timezone=cursor.getString(8);
-                        nextnode.eventcolor= 56789; // cursor.getInt(8);
-                        prev.nextnode=nextnode;
-
-
+                        String tt[] = Arrays.copyOf(s, s.length + 1);
+                        tt[tt.length - 1] = eTitle;
+                        eventInfo.titles =tt;
+                        EventInfo nextNode=new EventInfo();
+                        nextNode.id=eID;
+                        nextNode.startTime =eStart;
+                        nextNode.finishTime = eFinish;
+                        nextNode.isAllDay = eAllay;
+                        nextNode.title=eTitle;
+                        nextNode.timeZone =eZone;
+                        nextNode.calName = eCalName;
+                        nextNode.eventcolor = setColorValue(eCalName);
+                        prev.nextNode =nextNode;
                         localDateHashMap.put(localDate, eventInfo);
                     }
 
@@ -174,6 +145,18 @@ public class Utility {
         }
 
         return localDateHashMap;
+    }
+
+    private static int setColorValue(String eCalName) {
+        switch (eCalName) {
+            case "Rio Papa":
+                return (0xffffccdd);
+            case "Rio Mama":
+                return (0xffccdd44);
+            case "events":
+                return (0xffdd44ff);
+        }
+        return(0xff00ff00);
     }
 
     public static LocalDate getDate(long milliSeconds) {

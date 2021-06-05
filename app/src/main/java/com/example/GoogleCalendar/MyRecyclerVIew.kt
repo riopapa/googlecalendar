@@ -11,7 +11,7 @@ class MyRecyclerView @JvmOverloads constructor(context: Context, attrs: Attribut
     private var mAppBarTracking: AppBarTracking? = null
     private var mView: View? = null
     private var mTopPos: Int = 0
-    private var lastev: Float = 0f;
+    private var lastEV: Float = 0f;
     private var current: Int = 0
     private var mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
@@ -80,7 +80,7 @@ class MyRecyclerView @JvmOverloads constructor(context: Context, attrs: Attribut
 
                 mView = mLayoutManager!!.findViewByPosition(mAppBarTracking!!.appbaroffset())
                 if (mView != null) {
-                    consumed!![1] = dy - mView!!.top + MainActivity.topspace
+                    consumed!![1] = dy - mView!!.top + MainActivity.topSpace
                 }
 
                 return true

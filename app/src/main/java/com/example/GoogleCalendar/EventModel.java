@@ -5,12 +5,12 @@ import org.joda.time.LocalDate;
 import androidx.annotation.NonNull;
 
 public class EventModel implements Comparable<EventModel> {
-    private String eventname;
+    private String eventName;
     private LocalDate localDate;
     private int type;
 
-    public EventModel(String eventname, LocalDate localDate, int type) {
-        this.eventname = eventname;
+    public EventModel(String eventName, LocalDate localDate, int type) {
+        this.eventName = eventName;
         this.localDate = localDate;
         this.type = type;
     }
@@ -27,12 +27,12 @@ public class EventModel implements Comparable<EventModel> {
         this.localDate = localDate;
     }
 
-    public String getEventname() {
-        return eventname;
+    public String getEventName() {
+        return eventName;
     }
 
-    public void setEventname(String eventname) {
-        this.eventname = eventname;
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     @Override

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.joda.time.LocalDate;
@@ -29,12 +28,10 @@ public class MonthFragment extends Fragment {
     private String title;
     private ArrayList<DayModel> dayModels;
     private RecyclerView gridView;
-    private int firstday;
+    private int firstDay;
     private int month, year;
-    private int singleitemheight;
+    private int singleItemHeight;
     private int index;
-
-
 
     public MonthFragment() {
         // Required empty public constructor
@@ -62,10 +59,10 @@ public class MonthFragment extends Fragment {
                 dayModel.setMonth(localDate.getMonthOfYear());
                 dayModel.setYear(localDate.getYear());
                 if (alleventlist.containsKey(localDate)) {
-                    dayModel.setEvents(alleventlist.get(localDate).eventtitles);
+                    dayModel.setEvents(alleventlist.get(localDate).titles);
                 }
 
-                dayModel.setIsenable(false);
+                dayModel.setEnable(false);
                 adapterdata.add(dayModel);
 
             } else if (i >= dayModels.size() + page) {
@@ -78,21 +75,21 @@ public class MonthFragment extends Fragment {
                 dayModel.setDay(localDate.getDayOfMonth());
                 dayModel.setMonth(localDate.getMonthOfYear());
                 dayModel.setYear(localDate.getYear());
-                dayModel.setIsenable(false);
+                dayModel.setEnable(false);
                 if (alleventlist.containsKey(localDate)) {
-                    dayModel.setEvents(alleventlist.get(localDate).eventtitles);
+                    dayModel.setEvents(alleventlist.get(localDate).titles);
                 }
                 adapterdata.add(dayModel);
             } else {
                 DayModel dayModel = dayModels.get(i - page);
-                dayModel.setIsenable(true);
+                dayModel.setEnable(true);
                 if (dayModel.isToday()) {
                     Log.e("index", i % 7 + "");
                     args.putInt("index", i % 7);
                 }
                 LocalDate mydate = new LocalDate(year, month, dayModel.getDay());
                 if (alleventlist.containsKey(mydate)) {
-                    dayModel.setEvents(alleventlist.get(mydate).eventtitles);
+                    dayModel.setEvents(alleventlist.get(mydate).titles);
                 }
                 adapterdata.add(dayModels.get(i - page));
 
@@ -106,11 +103,11 @@ public class MonthFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firstday = getArguments().getInt("firstday");
+        firstDay = getArguments().getInt("firstday");
         month = getArguments().getInt("month");
         year = getArguments().getInt("year");
         index = getArguments().getInt("index", -1);
-        singleitemheight = getArguments().getInt("singleitemheight");
+        singleItemHeight = getArguments().getInt("singleitemheight");
     }
 
     @Override
@@ -151,7 +148,7 @@ public class MonthFragment extends Fragment {
         @Override
         public MonthViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
 
-            Log.e("itemheight",singleitemheight+"");
+//            Log.e("itemheight",singleitemheight+"");
          //   RelativeLayout relativeLayout = new RelativeLayout(getActivity());
 
             // Defining the RelativeLayout layout parameters.
@@ -183,7 +180,7 @@ public class MonthFragment extends Fragment {
             }
 
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            layoutParams.height = singleitemheight;
+            layoutParams.height = singleItemHeight;
             view.setLayoutParams(layoutParams);
             return new MonthViewHolder(view);
 
@@ -198,7 +195,7 @@ public class MonthFragment extends Fragment {
             if (dayModels.get(position).isToday()) {
                 holder.textView.setBackgroundResource(R.drawable.smallcircle);
                 holder.textView.setTextColor(Color.WHITE);
-            } else if (dayModels.get(position).isenable()) {
+            } else if (dayModels.get(position).isEnable()) {
                 holder.textView.setTextColor(Color.BLACK);
                 holder.textView.setBackgroundColor(Color.TRANSPARENT);
             } else {

@@ -30,7 +30,6 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.OverScroller;
-import android.widget.ScrollView;
 
 import com.example.GoogleCalendar.MainActivity;
 import com.example.GoogleCalendar.R;
@@ -47,7 +46,6 @@ import androidx.annotation.Nullable;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.ViewCompat;
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.example.GoogleCalendar.weekview.WeekViewUtil.isSameDay;
 import static com.example.GoogleCalendar.weekview.WeekViewUtil.today;
@@ -78,7 +76,7 @@ public class WeekView extends View {
     private float mHeaderTextHeight;
 private View shadow;
     private Paint jHeaderTextPaint;
-    private Paint jtodayHeaderTextPaint;
+    private Paint jTodayHeaderTextPaint;
 
     private float jHeaderTextHeight;
 
@@ -418,10 +416,10 @@ private View shadow;
         mHeaderTextHeight = rect.height();
 
 
-        jtodayHeaderTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        jtodayHeaderTextPaint.setColor(Color.WHITE);
-        jtodayHeaderTextPaint.setTextAlign(Paint.Align.CENTER);
-        jtodayHeaderTextPaint.setTextSize(mTextSize*1.6f);
+        jTodayHeaderTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        jTodayHeaderTextPaint.setColor(Color.WHITE);
+        jTodayHeaderTextPaint.setTextAlign(Paint.Align.CENTER);
+        jTodayHeaderTextPaint.setTextSize(mTextSize*1.6f);
 
         jHeaderTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         jHeaderTextPaint.setColor(Color.DKGRAY);
@@ -855,7 +853,7 @@ private View shadow;
 
             // Draw the day labels.
             String dayLabel1 = getDateTimeInterpreter().interpretDate(day);
-            String dayLabel = getDateTimeInterpreter().interpretday(day);
+            String dayLabel = getDateTimeInterpreter().interpretDay(day);
             if (dayLabel == null)
                 throw new IllegalStateException("A DateTimeInterpreter must not return null date");
             if (mNumberOfVisibleDays!=1)canvas.drawLine(startPixel,mHeaderHeight+mHeaderRowPadding*3-105 ,startPixel,getHeight(),mHourSeparatorPaint);
@@ -869,7 +867,7 @@ private View shadow;
                 if (sameDay)canvas.drawRoundRect(xx-50,y-50,xx+50,y+50,50,50,mTodayBackgroundPaint);
 
                 canvas.drawText(dayLabel, startPixel-mHeaderColumnWidth/2.0f  , mHeaderTextHeight + mHeaderRowPadding/3.0f, sameDay ? mTodayHeaderTextPaint : mHeaderTextPaint);
-                canvas.drawText(dayLabel1,  startPixel -mHeaderColumnWidth/2.0f , mHeaderTextHeight + mHeaderRowPadding*1.76f+jHeaderTextHeight, sameDay ? jtodayHeaderTextPaint : jHeaderTextPaint);
+                canvas.drawText(dayLabel1,  startPixel -mHeaderColumnWidth/2.0f , mHeaderTextHeight + mHeaderRowPadding*1.76f+jHeaderTextHeight, sameDay ? jTodayHeaderTextPaint : jHeaderTextPaint);
                 drawAllDayEvents(day, startPixel, canvas);
 
 
@@ -877,7 +875,7 @@ private View shadow;
             else {
                 if (sameDay)canvas.drawRoundRect(x-50,y-50,x+50,y+50,50,50,mTodayBackgroundPaint);
                 canvas.drawText(dayLabel, startPixel + mWidthPerDay / 2, mHeaderTextHeight + mHeaderRowPadding/3.0f, sameDay ? mTodayHeaderTextPaint : mHeaderTextPaint);
-                canvas.drawText(dayLabel1, startPixel + mWidthPerDay / 2, mHeaderTextHeight + mHeaderRowPadding*1.76f+jHeaderTextHeight, sameDay ? jtodayHeaderTextPaint : jHeaderTextPaint);
+                canvas.drawText(dayLabel1, startPixel + mWidthPerDay / 2, mHeaderTextHeight + mHeaderRowPadding*1.76f+jHeaderTextHeight, sameDay ? jTodayHeaderTextPaint : jHeaderTextPaint);
                 drawAllDayEvents(day, startPixel, canvas);
 
             }
@@ -1505,7 +1503,7 @@ private View shadow;
         if (mDateTimeInterpreter == null) {
             mDateTimeInterpreter = new DateTimeInterpreter() {
                 @Override
-                public String interpretday(Calendar date) {
+                public String interpretDay(Calendar date) {
                     try {
                         int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_NUMERIC_DATE;
                         String localizedDate = DateUtils.formatDateTime(getContext(), date.getTime().getTime(), flags);

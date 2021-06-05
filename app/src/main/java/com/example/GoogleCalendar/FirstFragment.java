@@ -20,14 +20,14 @@ public class FirstFragment extends Fragment {
     private String title;
     private ArrayList<DayModel> dayModels;
     private RecyclerView gridView;
-    private int firstday;
+    private int firstDay;
     private int month, year;
 
     // newInstance constructor for creating fragment with arguments
     public static FirstFragment newInstance(int month, int year, int page, ArrayList<DayModel> dayModels) {
         FirstFragment fragmentFirst = new FirstFragment();
         Bundle args = new Bundle();
-        args.putInt("firstday", page);
+        args.putInt("firstDay", page);
         args.putInt("month", month);
         args.putInt("year", year);
         fragmentFirst.dayModels = dayModels;
@@ -39,7 +39,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firstday = getArguments().getInt("firstday");
+        firstDay = getArguments().getInt("firstDay");
         month = getArguments().getInt("month");
         year = getArguments().getInt("year");
     }
@@ -83,10 +83,10 @@ public class FirstFragment extends Fragment {
         public void onBindViewHolder(Myadapter.ViewHolder holder, int position) {
 
 
-            if (position >= firstday) {
-                position = position - firstday;
+            if (position >= firstDay) {
+                position = position - firstDay;
                 DayModel dayModel = dayModels.get(position);
-                boolean selected = dayModel.getDay() == MainActivity.lastdate.getDayOfMonth() && dayModel.getMonth() == MainActivity.lastdate.getMonthOfYear() && dayModel.getYear() == MainActivity.lastdate.getYear() ? true : false;
+                boolean selected = dayModel.getDay() == MainActivity.lastDate.getDayOfMonth() && dayModel.getMonth() == MainActivity.lastDate.getMonthOfYear() && dayModel.getYear() == MainActivity.lastDate.getYear() ? true : false;
 
                 if (dayModel.isToday()) {
                     holder.textView.setBackgroundResource(R.drawable.circle);
@@ -103,7 +103,7 @@ public class FirstFragment extends Fragment {
                 }
                 holder.textView.setText(dayModels.get(position).getDay() + "");
 
-                if (dayModel.getEventlist() && !selected) {
+                if (dayModel.getEventList() && !selected) {
                     holder.eventview.setVisibility(View.VISIBLE);
                 } else {
                     holder.eventview.setVisibility(View.GONE);
@@ -120,7 +120,7 @@ public class FirstFragment extends Fragment {
         @Override
         public int getItemCount() {
 
-            return dayModels.size() + firstday;
+            return dayModels.size() + firstDay;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -135,14 +135,14 @@ public class FirstFragment extends Fragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (getAdapterPosition() >= firstday) {
+                        if (getAdapterPosition() >= firstDay) {
                             for (DayModel dayModel : dayModels) {
                                 dayModel.setSelected(false);
                             }
-                            DayModel dayModel = dayModels.get(getAdapterPosition() - firstday);
-                            MainActivity.lastdate = new LocalDate(year, month, dayModels.get(getAdapterPosition() - firstday).getDay());
+                            DayModel dayModel = dayModels.get(getAdapterPosition() - firstDay);
+                            MainActivity.lastDate = new LocalDate(year, month, dayModels.get(getAdapterPosition() - firstDay).getDay());
 
-                            EventBus.getDefault().post(new MessageEvent(new LocalDate(year, month, dayModels.get(getAdapterPosition() - firstday).getDay())));
+                            EventBus.getDefault().post(new MessageEvent(new LocalDate(year, month, dayModels.get(getAdapterPosition() - firstDay).getDay())));
                             // dayModels.get(getAdapterPosition()-firstday).setSelected(true);
                             notifyDataSetChanged();
                         }

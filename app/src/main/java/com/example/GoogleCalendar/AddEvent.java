@@ -7,12 +7,12 @@ import java.util.HashMap;
 
 public class AddEvent {
     public ArrayList<EventModel> arrayList;
-    public HashMap<LocalDate, Integer> indextracker;
+    public HashMap<LocalDate, Integer> indexTracker;
     public ArrayList<MonthModel> monthModels;
 
-    public AddEvent(ArrayList<EventModel> arrayList, HashMap<LocalDate, Integer> indextracker, ArrayList<MonthModel> monthModels) {
+    public AddEvent(ArrayList<EventModel> arrayList, HashMap<LocalDate, Integer> indexTracker, ArrayList<MonthModel> monthModels) {
         this.arrayList = arrayList;
-        this.indextracker = indextracker;
+        this.indexTracker = indexTracker;
         this.monthModels = monthModels;
     }
 
@@ -24,7 +24,7 @@ public class AddEvent {
         return arrayList;
     }
 
-    public HashMap<LocalDate, Integer> getIndextracker() {
-        return indextracker;
+    public HashMap<LocalDate, Integer> getIndexTracker() {
+        return indexTracker;
     }
 }

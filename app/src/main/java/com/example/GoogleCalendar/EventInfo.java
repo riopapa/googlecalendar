@@ -1,17 +1,18 @@
 package com.example.GoogleCalendar;
 
 public class EventInfo {
-    public String[] eventtitles;
-    public boolean isallday;
+    public String[] titles;
+    public boolean isAllDay;
     public int id;
-    public long starttime;
-    public long endtime;
-    public EventInfo nextnode;
+    public long startTime;
+    public long finishTime;
+    public EventInfo nextNode;
     public String title;
-    public String timezone;
+    public String timeZone;
+    public String calName;
     public int eventcolor;
-    public EventInfo(String[] eventtitles){
-        this.eventtitles=eventtitles;
+    public EventInfo(String[] titles){
+        this.titles = titles;
     }
     public EventInfo(){
     }

@@ -3,20 +3,20 @@ package com.example.GoogleCalendar;
 import java.util.ArrayList;
 
 public class MonthModel {
-    private String monthnamestr;
+    private String monthNameStr;
     private int month;
     private int year;
-    private int noofday;
-    private int noofweek;
+    private int noofDay;
+    private int noofWeek;
     private ArrayList<DayModel> dayModelArrayList;
-    private int firstday;
+    private int firstDay;
 
-    public int getFirstday() {
-        return firstday;
+    public int getFirstDay() {
+        return firstDay;
     }
 
-    public void setFirstday(int firstday) {
-        this.firstday = firstday;
+    public void setFirstDay(int firstDay) {
+        this.firstDay = firstDay;
     }
 
     public ArrayList<DayModel> getDayModelArrayList() {
@@ -27,12 +27,12 @@ public class MonthModel {
         this.dayModelArrayList = dayModelArrayList;
     }
 
-    public String getMonthnamestr() {
-        return monthnamestr;
+    public String getMonthNameStr() {
+        return monthNameStr;
     }
 
-    public void setMonthnamestr(String monthnamestr) {
-        this.monthnamestr = monthnamestr;
+    public void setMonthNameStr(String monthNameStr) {
+        this.monthNameStr = monthNameStr;
     }
 
     public int getMonth() {
@@ -51,19 +51,19 @@ public class MonthModel {
         this.year = year;
     }
 
-    public int getNoofday() {
-        return noofday;
+    public int getNoofDay() {
+        return noofDay;
     }
 
-    public void setNoofday(int noofday) {
-        this.noofday = noofday;
+    public void setNoofDay(int noofDay) {
+        this.noofDay = noofDay;
     }
 
-    public int getNoofweek() {
-        return noofweek;
+    public int getNoofWeek() {
+        return noofWeek;
     }
 
-    public void setNoofweek(int noofweek) {
-        this.noofweek = noofweek;
+    public void setNoofWeek(int noofWeek) {
+        this.noofWeek = noofWeek;
     }
 }
